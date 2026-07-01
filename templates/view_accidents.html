@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>View Accidents</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="table-page">
+
+    <div class="table-container">
+
+        <!-- HEADER -->
+
+        <div class="table-header">
+
+            <h1>🚑 Accident Records</h1>
+
+            <div class="header-buttons">
+
+                <a href="/dashboard"
+                   class="dashboard-btn">
+
+                   ← Dashboard
+
+                </a>
+
+                <a href="/add-accident"
+                   class="add-btn">
+
+                    + Add Accident
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Location</th>
+
+                    <th>Severity</th>
+
+                    <th>Casualties</th>
+
+                    <th>Reason</th>
+
+                    <th>Evidence</th>
+
+                    <th>Date & Time</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for row in accidents %}
+
+                <tr>
+
+                    <!-- ID -->
+
+                    <td>{{ row[0] }}</td>
+
+                    <!-- LOCATION -->
+
+                    <td>{{ row[1] }}</td>
+
+                    <!-- SEVERITY -->
+
+                    <td>
+
+                        {% if row[4] == 'Minor' %}
+
+                            <span style="
+                            background:#dcfce7;
+                            color:green;
+                            padding:6px 12px;
+                            border-radius:20px;
+                            font-weight:bold;">
+
+                            🟢 Minor
+
+                            </span>
+
+                        {% elif row[4] == 'Major' %}
+
+                            <span style="
+                            background:#fef3c7;
+                            color:#d97706;
+                            padding:6px 12px;
+                            border-radius:20px;
+                            font-weight:bold;">
+
+                            🟠 Major
+
+                            </span>
+
+                        {% else %}
+
+                            <span style="
+                            background:#fee2e2;
+                            color:red;
+                            padding:6px 12px;
+                            border-radius:20px;
+                            font-weight:bold;">
+
+                            🔴 Critical
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <!-- CASUALTIES -->
+
+                    <td>{{ row[5] }}</td>
+
+                    <!-- REASON -->
+
+                    <td>{{ row[6] }}</td>
+
+                    <!-- EVIDENCE IMAGE -->
+
+                    <td>
+
+                        {% if row[7] %}
+
+                        <img src="{{ url_for(
+                            'static',
+                            filename='uploads/' + row[7]
+                        ) }}"
+
+                        width="100"
+
+                        style="
+                        border-radius:10px;
+                        box-shadow:0 2px 8px rgba(0,0,0,0.2);
+                        ">
+
+                        {% else %}
+
+                        No Image
+
+                        {% endif %}
+
+                    </td>
+
+                    <!-- DATE TIME -->
+
+                    <td>
+
+                        {{ row[8] }}
+
+                    </td>
+
+                    <!-- ACTIONS -->
+
+                    <td>
+
+                        {% if session.get('role') == 'admin'
+                        or session.get('admin') %}
+
+                            <a href="/edit-accident/{{ row[0] }}"
+                               class="edit-btn">
+
+                               Edit
+
+                            </a>
+
+                            <a href="/delete-accident/{{ row[0] }}"
+                               class="delete-btn"
+
+                               onclick="return confirm(
+                               'Delete this accident?')">
+
+                               Delete
+
+                            </a>
+
+                        {% else %}
+
+                            <span class="no-access">
+
+                                View Only
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

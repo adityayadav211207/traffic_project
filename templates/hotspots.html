@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Traffic Hotspots</title>
+
+    <!-- CSS -->
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='css/style.css') }}">
+
+    <!-- LEAFLET -->
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+
+        #map{
+            height:500px;
+            width:100%;
+            border-radius:15px;
+            margin-top:30px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="table-page">
+
+    <div class="table-container">
+
+        <!-- TITLE -->
+
+        <div class="table-header">
+
+            <h1>🔥 Accident Hotspots</h1>
+
+        </div>
+
+        <!-- HOTSPOT TABLE -->
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Location</th>
+
+                    <th>Total Accidents</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for row in hotspots %}
+
+                <tr>
+
+                    <td>{{ row[0] }}</td>
+
+                    <td>
+
+    🚨 {{ row[-1] }} Accidents
+
+</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <!-- MAP -->
+
+        <div id="map"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* MAP */
+
+const map = L.map('map')
+.setView([28.7041, 77.1025], 6);
+
+
+/* OPEN STREET MAP */
+
+L.tileLayer(
+
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+
+{
+    attribution:'© OpenStreetMap'
+}
+
+).addTo(map);
+
+
+/* FLASK DATA */
+
+const hotspotsData =
+JSON.parse('{{ hotspots | tojson | safe }}');
+
+
+/* LOOP */
+
+for(let i = 0; i < hotspotsData.length; i++){
+
+    let row = hotspotsData[i];
+
+    let latitude =
+    parseFloat(row[1]);
+
+    let longitude =
+    parseFloat(row[2]);
+
+    let accidents =
+    parseInt(row[3]);
+
+
+    /* RED CIRCLE */
+
+    let circle = L.circle(
+
+        [latitude, longitude],
+
+        {
+
+            color:'red',
+
+            fillColor:'#ff0000',
+
+            fillOpacity:0.8,
+
+            radius: accidents * 500
+
+        }
+
+    ).addTo(map);
+    /* MARKER */
+
+L.marker([
+
+    latitude,
+
+    longitude
+
+]).addTo(map);
+
+
+    /* POPUP */
+
+    circle.bindPopup(
+
+        "<b>🚨 " + row[0] + "</b><br>" +
+
+        "Accidents: " +
+
+        accidents
+
+    );
+
+}
+
+</script>
+
+</body>
+</html>

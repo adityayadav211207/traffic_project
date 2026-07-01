@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Reports</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='css/style.css') }}">
+
+    <!-- CHART JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="report-page">
+
+    <div class="report-container">
+
+        <!-- HEADER -->
+
+        <div class="report-header">
+
+            <h1>📄 Traffic Reports</h1>
+
+            <div>
+
+                <a href="/dashboard"
+                   class="dashboard-btn">
+
+                   ← Dashboard
+
+                </a>
+
+                <button onclick="window.print()"
+                        class="print-btn">
+
+                    Print Report
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- REPORT CARDS -->
+
+        <div class="report-cards">
+
+            <div class="report-card">
+
+                <h2>{{ total_violations }}</h2>
+
+                <p>Total Violations</p>
+
+            </div>
+
+            <div class="report-card">
+
+                <h2>{{ total_accidents }}</h2>
+
+                <p>Total Accidents</p>
+
+            </div>
+
+            <div class="report-card">
+
+                <h2>{{ hotspot_count }}</h2>
+
+                <p>Hotspot Areas</p>
+
+            </div>
+
+            <div class="report-card">
+
+                <h2>₹ {{ total_fines }}</h2>
+
+                <p>Total Fines</p>
+
+            </div>
+
+        </div>
+
+        <!-- REPORT SUMMARY -->
+
+        <div class="report-summary">
+
+            <h2>📊 Report Summary</h2>
+
+            <p>
+
+                This report provides traffic violation and
+                accident analysis based on available
+                database records.
+
+            </p>
+
+            <ul>
+
+                <li>
+
+                    Total Violations Recorded:
+                    <strong>
+
+                        {{ total_violations }}
+
+                    </strong>
+
+                </li>
+
+                <li>
+
+                    Total Accident Cases:
+                    <strong>
+
+                        {{ total_accidents }}
+
+                    </strong>
+
+                </li>
+
+                <li>
+
+                    High Risk Hotspot Areas:
+                    <strong>
+
+                        {{ hotspot_count }}
+
+                    </strong>
+
+                </li>
+
+                <li>
+
+                    Total Fine Collection:
+                    <strong>
+
+                        ₹ {{ total_fines }}
+
+                    </strong>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- CHART SECTION -->
+
+        <div class="chart-section">
+
+            <!-- BAR CHART -->
+
+            <div class="chart-box">
+
+                <h2>
+
+                    🚓 Violation Analysis
+
+                </h2>
+
+                <canvas id="barChart"></canvas>
+
+            </div>
+
+            <!-- PIE CHART -->
+
+            <div class="chart-box">
+
+                <h2>
+
+                    🚑 Accident Severity
+
+                </h2>
+
+                <canvas id="pieChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CHART SCRIPT -->
+
+<script>
+
+/* FLASK DATA */
+
+const violationLabels =
+{{ violation_labels | tojson }};
+
+const violationValues =
+{{ violation_values | tojson }};
+
+const severityLabels =
+{{ severity_labels | tojson }};
+
+const severityValues =
+{{ severity_values | tojson }};
+
+
+/* BAR CHART */
+
+const bar =
+document.getElementById('barChart');
+
+new Chart(bar, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: violationLabels,
+
+        datasets: [{
+
+            label: 'Violations',
+
+            data: violationValues,
+
+            borderWidth: 1
+
+        }]
+
+    }
+
+});
+
+
+/* PIE CHART */
+
+const pie =
+document.getElementById('pieChart');
+
+new Chart(pie, {
+
+    type: 'doughnut',
+
+    data: {
+
+        labels: severityLabels,
+
+        datasets: [{
+
+            data: severityValues
+
+        }]
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

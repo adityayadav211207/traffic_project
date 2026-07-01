@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Police Login</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="login-box">
+
+        <!-- TITLE -->
+
+        <h1>🚔 Police Login</h1>
+
+        <p class="login-subtitle">
+
+            Traffic Police Access Portal
+
+        </p>
+
+        <!-- LOGIN FORM -->
+
+        <form method="POST">
+
+            <input type="text"
+                   name="username"
+                   placeholder="Police Username"
+                   required>
+
+            <input type="password"
+                   name="password"
+                   placeholder="Password"
+                   required>
+
+            <button type="submit">
+
+                Login
+
+            </button>
+
+        </form>
+
+        <!-- AVAILABLE ACCOUNTS -->
+
+        <div class="demo-box">
+
+            <h3>
+
+                🚓 Available Police Accounts
+
+            </h3>
+
+            {% for police in police_users %}
+
+            <div class="demo-user">
+
+                <p>
+
+                    👮 Username:
+                    <strong>{{ police[0] }}</strong>
+
+                </p>
+
+                <p>
+
+                    🔑 Password:
+                    <strong>{{ police[1] }}</strong>
+
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

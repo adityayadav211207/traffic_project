@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Accident</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="form-page">
+
+    <div class="form-container">
+
+        <h1>✏️ Edit Accident</h1>
+
+        <form method="POST">
+
+            <input type="text"
+                   name="location"
+                   value="{{ accident[1] }}"
+                   required>
+
+            <input type="text"
+                   name="severity"
+                   value="{{ accident[2] }}"
+                   required>
+
+            <input type="number"
+                   name="casualties"
+                   value="{{ accident[3] }}"
+                   required>
+
+            <textarea
+                name="reason"
+                required>{{ accident[4] }}</textarea>
+
+            <button type="submit">
+
+                Update Accident
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

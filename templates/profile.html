@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Profile</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="form-page">
+
+    <div class="form-container">
+
+        <h1>👮 Admin Profile</h1>
+
+        <div class="profile-box">
+
+    <p>
+        <strong>Username:</strong>
+        {{ session['user'] }}
+    </p>
+
+    <p>
+        <strong>Role:</strong>
+        Administrator
+    </p>
+
+    <p>
+        <strong>Status:</strong>
+        Active
+    </p>
+
+</div>
+
+        <a href="/dashboard"
+           class="add-btn">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

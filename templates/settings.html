@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Settings</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="form-page">
+
+    <div class="form-container">
+
+        <h1>⚙️ System Settings</h1>
+
+        <form>
+
+            <label>
+
+                Change Dashboard Theme
+
+            </label>
+
+            <select>
+
+                <option>Dark Mode</option>
+
+                <option>Light Mode</option>
+
+            </select>
+
+            <label>
+
+                Notification Alerts
+
+            </label>
+
+            <select>
+
+                <option>Enabled</option>
+
+                <option>Disabled</option>
+
+            </select>
+
+            <button type="submit">
+
+                Save Settings
+
+            </button>
+
+        </form>
+
+        <br>
+
+        <a href="/dashboard"
+           class="add-btn">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

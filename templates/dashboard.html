@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrafficVision Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            🚦 TrafficVision
+        </div>
+
+        <ul class="menu">
+
+            <li class="active">
+                <a href="/dashboard">Dashboard</a>
+            </li>
+
+            <li>
+                <a href="/add-violation">Add Violation</a>
+            </li>
+
+            <li>
+                <a href="/view-violations">View Violations</a>
+            </li>
+
+            <li>
+                <a href="/add-accident">Add Accident</a>
+            </li>
+
+            <li>
+                <a href="/view-accidents">View Accidents</a>
+            </li>
+
+            <li>
+                <a href="/hotspots">Hotspots</a>
+            </li>
+
+            <li>
+                <a href="/reports">Reports</a>
+            </li>
+
+            <li>
+                <a href="/logout">Logout</a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+
+    <div class="main-content">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <h1>Traffic Dashboard</h1>
+
+            <div class="topbar-right">
+
+                <!-- DARK MODE -->
+
+                <button class="theme-btn"
+                        onclick="toggleTheme()">
+
+                    🌙 Dark Mode
+
+                </button>
+
+                <!-- ADMIN MENU -->
+
+                <div class="admin-dropdown">
+
+                    <button class="admin-btn"
+                            onclick="toggleMenu()">
+
+                        👮 Admin
+
+                    </button>
+
+                    <div class="dropdown-content"
+     id="adminMenu">
+
+    {% if session.get('admin') %}
+
+        <a href="/profile">
+
+            👤 Profile
+
+        </a>
+
+        <a href="/settings">
+
+            ⚙️ Settings
+
+        </a>
+        <a href="/add-police">
+
+    🚔 Add New Police
+
+</a>
+
+        <a href="/admin-logout">
+
+            🚪 Admin Logout
+
+        </a>
+
+    {% else %}
+
+        <a href="/admin-login">
+
+            🔐 Admin Login
+
+        </a>
+
+    {% endif %}
+
+</div>
+
+                </div>
+
+                <!-- POLICE LOGIN / LOGOUT -->
+
+               {% if session.get('role') == 'police'
+   and not session.get('admin') %}
+
+<a href="/logout"
+   class="police-btn">
+
+   🚪 Police Logout
+
+</a>
+
+{% else %}
+
+<a href="/police-login"
+   class="police-btn">
+
+   🚔 Police Login
+
+</a>
+
+{% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- CARDS -->
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h2>{{ total_violations }}</h2>
+
+                <p>Total Violations</p>
+
+            </div>
+
+            <div class="card">
+
+                <h2>{{ total_accidents }}</h2>
+
+                <p>Total Accidents</p>
+
+            </div>
+
+            <div class="card">
+
+                <h2>{{ hotspot_count }}</h2>
+
+                <p>Hotspot Areas</p>
+
+            </div>
+
+            <div class="card">
+
+                <h2>₹ {{ total_fines }}</h2>
+
+                <p>Total Fines</p>
+
+            </div>
+
+        </div>
+
+        <!-- CHARTS -->
+
+        <div class="chart-section">
+
+            <div class="chart-box">
+
+                <h3>Violation Type Analysis</h3>
+
+                <canvas id="myChart"></canvas>
+
+            </div>
+
+            <div class="chart-box">
+
+                <h3>Accident Severity</h3>
+
+                <canvas id="pieChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* FLASK DATA */
+
+const violationLabels =
+{{ violation_labels | tojson }};
+
+const violationValues =
+{{ violation_values | tojson }};
+
+const severityLabels =
+{{ severity_labels | tojson }};
+
+const severityValues =
+{{ severity_values | tojson }};
+
+
+/* BAR CHART */
+
+const ctx =
+document.getElementById('myChart');
+
+new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: violationLabels,
+
+        datasets: [{
+
+            label: 'Violations',
+
+            data: violationValues,
+
+            borderWidth: 1
+
+        }]
+
+    }
+
+});
+
+
+/* PIE CHART */
+
+const pie =
+document.getElementById('pieChart');
+
+new Chart(pie, {
+
+    type: 'doughnut',
+
+    data: {
+
+        labels: severityLabels,
+
+        datasets: [{
+
+            data: severityValues
+
+        }]
+
+    }
+
+});
+
+
+/* ADMIN MENU */
+
+function toggleMenu(){
+
+    document
+    .getElementById("adminMenu")
+    .classList.toggle("show");
+
+}
+
+
+/* CLOSE MENU */
+
+window.onclick = function(event){
+
+    if(!event.target.matches('.admin-btn')){
+
+        let dropdown =
+        document.getElementById("adminMenu");
+
+        if(dropdown.classList.contains('show')){
+
+            dropdown.classList.remove('show');
+
+        }
+
+    }
+
+}
+
+
+/* DARK MODE */
+
+function toggleTheme(){
+
+    document.body.classList.toggle("dark-mode");
+
+    if(document.body.classList.contains("dark-mode")){
+
+        localStorage.setItem("theme", "dark");
+
+    }
+
+    else{
+
+        localStorage.setItem("theme", "light");
+
+    }
+
+}
+
+
+/* LOAD THEME */
+
+window.onload = function(){
+
+    if(localStorage.getItem("theme") === "dark"){
+
+        document.body.classList.add("dark-mode");
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

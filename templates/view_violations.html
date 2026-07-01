@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>View Violations</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="table-page">
+
+    <div class="table-container">
+
+        <!-- HEADER -->
+
+        <div class="table-header">
+
+            <h1>🚓 Traffic Violations</h1>
+
+            <div class="header-buttons">
+
+                <a href="/dashboard"
+                   class="dashboard-btn">
+
+                   ← Dashboard
+
+                </a>
+
+                <a href="/add-violation"
+                   class="add-btn">
+
+                    + Add Violation
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- SEARCH BOX -->
+
+        <input type="text"
+               id="searchInput"
+               placeholder="🔍 Search Vehicle Number..."
+               class="search-box">
+
+        <!-- TABLE -->
+
+        <table id="violationTable">
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Vehicle No</th>
+
+                    <th>Driver</th>
+
+                    <th>Violation</th>
+
+                    <th>Fine</th>
+
+                    <th>Location</th>
+
+                    <th>Date & Time</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for row in violations %}
+
+                <tr>
+
+                    <!-- ID -->
+
+                    <td>{{ row[0] }}</td>
+
+                    <!-- VEHICLE -->
+
+                    <td>{{ row[1] }}</td>
+
+                    <!-- DRIVER -->
+
+                    <td>{{ row[2] }}</td>
+
+                    <!-- VIOLATION -->
+
+                    <td>
+
+                        {% if row[3] == 'Helmet Violation' %}
+
+                            <span style="
+                            background:#dbeafe;
+                            color:#1d4ed8;
+                            padding:6px 12px;
+                            border-radius:20px;
+                            font-weight:bold;">
+
+                            🪖 Helmet
+
+                            </span>
+
+                        {% elif row[3] == 'Overspeeding' %}
+
+                            <span style="
+                            background:#fee2e2;
+                            color:red;
+                            padding:6px 12px;
+                            border-radius:20px;
+                            font-weight:bold;">
+
+                            🚀 Overspeed
+
+                            </span>
+
+                        {% else %}
+
+                            <span style="
+                            background:#f3f4f6;
+                            color:#111827;
+                            padding:6px 12px;
+                            border-radius:20px;
+                            font-weight:bold;">
+
+                            ⚠️ {{ row[3] }}
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <!-- FINE -->
+
+                    <td>
+
+                        <strong>
+
+                            ₹ {{ row[4] }}
+
+                        </strong>
+
+                    </td>
+
+                    <!-- LOCATION -->
+
+                    <td>{{ row[5] }}</td>
+
+                    <!-- DATE TIME -->
+
+                    <td>
+
+                        {{ row[6] }}
+
+                    </td>
+
+                    <!-- ACTIONS -->
+
+                    <td>
+
+                        {% if session.get('role') == 'admin'
+                        or session.get('admin') %}
+
+                            <a href="/edit-violation/{{ row[0] }}"
+                               class="edit-btn">
+
+                               Edit
+
+                            </a>
+
+                            <a href="/delete-violation/{{ row[0] }}"
+                               class="delete-btn"
+
+                               onclick="return confirm('Delete this violation?')">
+
+                               Delete
+
+                            </a>
+
+                        {% else %}
+
+                            <span class="no-access">
+
+                                View Only
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<!-- SEARCH SCRIPT -->
+
+<script>
+
+const searchInput =
+document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function(){
+
+    let filter =
+    searchInput.value.toLowerCase();
+
+    let table =
+    document.getElementById("violationTable");
+
+    let tr =
+    table.getElementsByTagName("tr");
+
+    for(let i = 1; i < tr.length; i++){
+
+        let td =
+        tr[i].getElementsByTagName("td")[1];
+
+        if(td){
+
+            let text =
+            td.textContent || td.innerText;
+
+            if(text.toLowerCase().indexOf(filter) > -1){
+
+                tr[i].style.display = "";
+
+            }
+
+            else{
+
+                tr[i].style.display = "none";
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

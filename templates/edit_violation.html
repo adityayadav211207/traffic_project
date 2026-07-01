@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Violation</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="form-page">
+
+    <div class="form-container">
+
+        <h1>✏️ Edit Violation</h1>
+
+        <form method="POST">
+
+            <input type="text"
+                   name="vehicle_no"
+                   value="{{ violation[1] }}"
+                   required>
+
+            <input type="text"
+                   name="driver_name"
+                   value="{{ violation[2] }}"
+                   required>
+
+            <input type="text"
+                   name="violation_type"
+                   value="{{ violation[3] }}"
+                   required>
+
+            <input type="number"
+                   name="fine"
+                   value="{{ violation[4] }}"
+                   required>
+
+            <input type="text"
+                   name="location"
+                   value="{{ violation[5] }}"
+                   required>
+
+            <button type="submit">
+
+                Update Violation
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
